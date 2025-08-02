@@ -1,0 +1,25 @@
+# Node.js
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Logs
+logs
+*.log
+*.tmp
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Build output
+frontend/.next
+frontend/out
+backend/dist
+
+# OS files
+.DS_Store
+Thumbs.db
