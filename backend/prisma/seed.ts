@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -21,6 +22,36 @@ async function main() {
   } else {
     console.log('ℹ️ Default role "user" already exists');
   }
+
+  let adminRole = await prisma.role.findFirst({
+    where: { title: 'Admin' },
+  });
+
+  if (!adminRole) {
+    adminRole = await prisma.role.create({
+      data: {
+        title: 'Admin',
+        permissions: ['Role'],
+      },
+    });
+    console.log('✅ Created default role: admin');
+  } else {
+    console.log('ℹ️ Default role "admin" already exists');
+  }
+
+  const hashedPassword = await bcrypt.hash('admin', 10);
+
+  // Create admin user if it doesn't exist
+  await prisma.user.upsert({
+    where: { email: 'admin@example.com' },
+    update: {},
+    create: {
+      email: 'admin@example.com',
+      name: 'admin',
+      password: hashedPassword,
+      roleId: adminRole.id,
+    },
+  });
 
   console.log('🌱 Database seed complete!');
 }
