@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exceptions.filter';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,10 +20,18 @@ async function bootstrap() {
     .addServer(apiUrl, 'Default server')
     .build();
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
+
+  app.setGlobalPrefix('api');
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  app.setGlobalPrefix('api');
   app.useGlobalFilters(new PrismaClientExceptionFilter());
 
   const port = parseInt(process.env.PORT ?? '3000', 10);

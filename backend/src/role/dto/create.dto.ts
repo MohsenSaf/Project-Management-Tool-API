@@ -1,18 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { ROLE_SWAGGER_EXAMPLES } from 'src/constants/swagger/role.example';
 
-export class CreateDto {
+export class CreateRoleDto {
   @ApiProperty({
-    example: 'role',
-    description: 'The title of the role',
+    example: ROLE_SWAGGER_EXAMPLES.TITLE,
   })
   @IsString()
   @IsNotEmpty()
   title: string;
 
   @ApiProperty({
-    example: ['role'],
-    description: 'The list of permissions of the role',
+    example: ROLE_SWAGGER_EXAMPLES.ARRAY_OF_STRING,
   })
   @IsArray()
   @IsString({ each: true })

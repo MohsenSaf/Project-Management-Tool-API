@@ -1,0 +1,27 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsOptional, IsInt, Min } from 'class-validator';
+
+export class PaginationRoleDto {
+  @ApiPropertyOptional({
+    description: 'Page number (starts from 1)',
+    example: 1,
+    type: Number,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page: number = 1;
+
+  @ApiPropertyOptional({
+    description: 'Number of items per page',
+    example: 10,
+    type: Number,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  pageSize: number = 10;
+}

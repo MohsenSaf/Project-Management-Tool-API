@@ -1,12 +1,27 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { RoleService } from './role.service';
-import { CreateDto } from './dto/create-role.dto';
+import { CreateRoleDto } from './dto/create.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/decorators/role.decorator';
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
-import { Permissions } from 'src/auth/decorators/permissions.decorator';
+import { PaginationRoleDto } from './dto/pagination.dto';
+import { updateRoleDto } from './dto/update-role.dto';
+import { ROLE_SWAGGER_EXAMPLES } from 'src/constants/swagger/role.example';
 
 @ApiBearerAuth()
 @Controller('role')
@@ -16,7 +31,46 @@ export class RoleController {
 
   @Post('create')
   @Role('Admin')
-  create(@Body() dto: CreateDto) {
+  create(@Body() dto: CreateRoleDto) {
     return this.roleService.create(dto);
+  }
+
+  @Get('list')
+  getList(@Query() query: PaginationRoleDto) {
+    return this.roleService.getList(query.page, query.pageSize);
+  }
+
+  @Get(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: String,
+    format: 'uuid',
+    example: ROLE_SWAGGER_EXAMPLES.UUID,
+  })
+  getById(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.roleService.getById(id);
+  }
+
+  @Patch(':id')
+  @Role('Admin')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: String,
+    format: 'uuid',
+    example: ROLE_SWAGGER_EXAMPLES.UUID,
+  })
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: updateRoleDto,
+  ) {
+    return this.roleService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  delete(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.roleService.delete(id);
   }
 }
