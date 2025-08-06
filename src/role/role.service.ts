@@ -8,7 +8,17 @@ export class RoleService {
   constructor(private prisma: PrismaService) {}
 
   async create(@Body() dto: CreateRoleDto) {
-    return await this.prisma.role.create({ data: dto });
+    return await this.prisma.role.create({
+      data: {
+        title: dto.title,
+        permissions: {
+          connect: dto.permissions.map((id) => ({ id })),
+        },
+      },
+      include: {
+        permissions: true,
+      },
+    })
   }
 
   async getById(@Param('id', new ParseUUIDPipe()) id: string) {
@@ -38,9 +48,11 @@ export class RoleService {
       where: { id },
       data: {
         title: dto.title,
-        permissions: dto.permissions,
+        permissions: {
+          connect: dto.permissions?.map((id) => ({ id })),
+        },
       },
-    });
+    })
   }
 
   async delete(id: string) {

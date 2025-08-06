@@ -16,28 +16,34 @@ export class AuthService {
   }
 
   async validator(email: string, password: string) {
-    const user = await this.prisma.user.findUnique({ where: { email } });
-    if (!user) throw new UnauthorizedException('Invalid credential');
-
-    const passwordValid = await bcrypt.compare(password, user.password);
-
-    if (!passwordValid) throw new UnauthorizedException('Invalid credentials');
-
+    const user = await this.prisma.user.findUnique({ where: { email } })
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException({
+        message: "The email or password you entered is incorrect.",
+        code: "AUTH_INVALID_CREDENTIALS",
+      })
+    }
     return user;
   }
 
   async generateTokens(userId: string, email: string) {
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
-        include: { role: true },
-      });
+        include: {
+          role: {
+            include: {
+              permissions: true,
+            },
+          },
+        },
+      })
 
       const payload = {
         sub: userId,
         email,
-        role: user?.role?.title ?? 'User',
-        permissions: user?.role?.permissions ?? [],
-      };
+        role: user?.role?.title ?? "User",
+        permissions: user?.role?.permissions?.map((p) => p.name) ?? [],
+      }
 
       const accessToken = await this.jwtService.signAsync(payload, {
         expiresIn: '8h',

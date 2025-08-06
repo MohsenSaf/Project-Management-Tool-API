@@ -8,12 +8,13 @@ export class CreateRoleDto {
   })
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title: string
 
   @ApiProperty({
     example: ROLE_SWAGGER_EXAMPLES.ARRAY_OF_STRING,
+    description: "List of permission IDs to assign to this role",
   })
   @IsArray()
   @IsString({ each: true })
-  permissions: string[];
+  permissions: string[]
 }

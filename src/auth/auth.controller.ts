@@ -11,9 +11,12 @@ export class AuthController {
 
   @Post('signup')
   async signup(@Body() dto: CreateUserDto) {
-    const userRole = await this.authService['prisma'].role.findUnique({
-      where: { title: 'User' },
-    });
+    const userRole = await this.authService["prisma"].role.findUnique({
+      where: { title: "User" },
+      include: {
+        permissions: true,
+      },
+    })
 
     const hashedPassword = await this.authService.hashPassword(dto.password);
     const user = await this.authService['prisma'].user.create({
@@ -37,11 +40,12 @@ export class AuthController {
   async login(@Body() dto: LoginDto) {
     const user = await this.authService.validator(dto.email, dto.password);
 
-    const permissions = await this.authService['prisma'].role
+    const permissions = await this.authService["prisma"].role
       .findUnique({
         where: { id: user.roleId },
+        include: { permissions: true },
       })
-      .then((role) => role?.permissions);
+      .then((role) => role?.permissions)
 
     const tokens = await this.authService.generateTokens(user.id, user.email);
 
