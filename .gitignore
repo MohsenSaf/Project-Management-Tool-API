@@ -18,7 +18,7 @@ logs
 # Build output
 frontend/.next
 frontend/out
-backend/dist
+dist
 
 # OS files
 .DS_Store
