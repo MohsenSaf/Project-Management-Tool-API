@@ -42,7 +42,7 @@ export class AuthService {
         sub: userId,
         email,
         role: user?.role?.title ?? "User",
-        permissions: user?.role?.permissions?.map((p) => p.name) ?? [],
+        permissions: user?.role?.permissions?.map((p) => p.title) ?? [],
       }
 
       const accessToken = await this.jwtService.signAsync(payload, {

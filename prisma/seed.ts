@@ -54,10 +54,10 @@ async function main() {
 
   for (const perm of PERMISSIONS) {
     await prisma.permission.upsert({
-      where: { name: perm.name },
+      where: { title: perm.title },
       update: { description: perm.description },
       create: {
-        name: perm.name,
+        title: perm.title,
         description: perm.description,
         roles: {
           connect: { id: adminRole.id },

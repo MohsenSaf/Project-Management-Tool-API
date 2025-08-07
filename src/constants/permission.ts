@@ -1,26 +1,26 @@
 export const PERMISSIONS = [
   {
-    name: "Role:Create",
+    title: "Role:Create",
     description: "Allows the user to create new roles",
   },
   {
-    name: "Role:Update",
+    title: "Role:Update",
     description: "Allows the user to update existing roles",
   },
   {
-    name: "Role:Delete",
+    title: "Role:Delete",
     description: "Allows the user to delete roles",
   },
   {
-    name: "User:Create",
+    title: "User:Create",
     description: "Allows the user to create new users",
   },
   {
-    name: "User:Update",
+    title: "User:Update",
     description: "Allows the user to update existing users",
   },
   {
-    name: "User:Delete",
+    title: "User:Delete",
     description: "Allows the user to delete users",
   },
 ]
