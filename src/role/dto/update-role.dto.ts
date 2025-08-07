@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsArray, IsOptional, IsString } from 'class-validator';
-import { ROLE_SWAGGER_EXAMPLES } from 'src/constants/swagger/role.example';
-import { trimString, trimStringArray } from 'src/utils/transformers';
+import { ROLE_SWAGGER_EXAMPLES } from '@/constants/swagger/role.example';
+import { trimString, trimStringArray } from '@/utils/transformers';
 
 export class updateRoleDto {
   @ApiPropertyOptional({

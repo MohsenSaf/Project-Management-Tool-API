@@ -15,13 +15,13 @@ import {
 import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create.dto';
-import { JwtAuthGuard } from "src/guards/jwt-auth.guard"
-import { RolesGuard } from "src/guards/roles.guard"
-import { Role } from "src/decorators/role.decorator"
-import { PermissionsGuard } from "src/guards/permissions.guard"
+import { JwtAuthGuard } from "@/guards/jwt-auth.guard"
+import { RolesGuard } from "@/guards/roles.guard"
+import { Role } from "@/decorators/role.decorator"
+import { PermissionsGuard } from "@/guards/permissions.guard"
 import { PaginationRoleDto } from './dto/pagination.dto';
 import { updateRoleDto } from './dto/update-role.dto';
-import { ROLE_SWAGGER_EXAMPLES } from 'src/constants/swagger/role.example';
+import { ROLE_SWAGGER_EXAMPLES } from "@/constants/swagger/role.example"
 
 @ApiBearerAuth()
 @Controller('role')

@@ -1,7 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger"
-import { Transform } from "class-transformer"
 import { IsArray, IsOptional, IsString, Matches } from "class-validator"
-import { PERMISSION_SWAGGER_EXAMPLES } from "src/constants/swagger/permission.example"
+import { PERMISSION_SWAGGER_EXAMPLES } from "@/constants/swagger/permission.example"
 
 export class UpdatePermissionDto {
   @ApiPropertyOptional({

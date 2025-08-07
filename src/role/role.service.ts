@@ -1,5 +1,5 @@
 import { Body, Injectable, Param, ParseUUIDPipe } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '@/prisma/prisma.service';
 import { CreateRoleDto } from './dto/create.dto';
 import { updateRoleDto } from './dto/update-role.dto';
 

@@ -14,12 +14,12 @@ import {
 import { ApiBearerAuth, ApiParam } from "@nestjs/swagger"
 
 import { PermissionService } from "./permission.service"
-import { Permissions } from "src/decorators/permissions.decorator"
+import { Permissions } from "@/decorators/permissions.decorator"
 import { CreatePermissionDto } from "./dto/create.dto"
-import { JwtAuthGuard } from "src/guards/jwt-auth.guard"
-import { PermissionsGuard } from "src/guards/permissions.guard"
+import { JwtAuthGuard } from "@/guards/jwt-auth.guard"
+import { PermissionsGuard } from "@/guards/permissions.guard"
 import { PaginationRoleDto } from "./dto/paganation.dto"
-import { PERMISSION_SWAGGER_EXAMPLES } from "src/constants/swagger/permission.example"
+import { PERMISSION_SWAGGER_EXAMPLES } from "@/constants/swagger/permission.example"
 import { UpdatePermissionDto } from "./dto/update.dto"
 
 @ApiBearerAuth()
