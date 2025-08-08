@@ -37,7 +37,7 @@ export class PermissionController {
   @Get("list")
   @Permissions("Permission:List")
   getList(@Query() query: PaginationRoleDto) {
-    return this.permissionService.getList(query.page, query.pageSize)
+    return this.permissionService.getList(query.page, query.pageSize,query.searchText)
   }
 
   @Get(":id")

@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
-import { PERMISSIONS } from "@/constants/permission"
+import { PERMISSIONS } from "../src/constants/permission"
+import { PrismaClient } from "@prisma/client"
+import * as bcrypt from "bcrypt"
 
 const prisma = new PrismaClient()
 
@@ -71,9 +71,9 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('❌ Error seeding database:', e);
-    process.exit(1);
+    console.error("❌ Error seeding database:", e)
+    process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })
