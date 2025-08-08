@@ -1,6 +1,6 @@
 import { PROJECT_SWAGGER_EXAMPLES } from "@/constants/swagger/project.example"
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
-import { IsNotEmpty, IsOptional, IsString } from "class-validator"
+import { IsDateString, IsNotEmpty, IsOptional, IsString } from "class-validator"
 
 export class CreateProjectDto {
   @ApiProperty({
@@ -16,4 +16,11 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   description: string
+
+  @ApiPropertyOptional({
+    example: PROJECT_SWAGGER_EXAMPLES.DATE,
+  })
+  @IsOptional()
+  @IsDateString()
+  endDate: string
 }

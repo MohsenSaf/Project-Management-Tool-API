@@ -11,6 +11,7 @@ export class ProjectService {
       data: {
         title: dto.title,
         description: dto.description,
+        endTime: dto.endDate,
         members: {
           create: [
             {
