@@ -62,7 +62,7 @@ export class ProjectMemberService {
       data: {
         status: dto.accept ? "ACTIVE" : "DECLINED",
         joinedAt: dto.accept ? new Date() : null,
-        role: dto.accept ? "MEMBER" : "VIEWER   ",
+        role: dto.accept ? "MEMBER" : "VIEWER",
       },
       select: {
         status: true,
