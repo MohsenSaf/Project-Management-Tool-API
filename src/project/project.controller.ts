@@ -1,7 +1,7 @@
 import { Permissions } from "@/decorators/permissions.decorator"
 import { JwtAuthGuard } from "@/guards/jwt-auth.guard"
 import { PermissionsGuard } from "@/guards/permissions.guard"
-import { RolesGuard } from "@/guards/roles.guard"
+import { SystemRolesGuard } from "@/guards/systemRoles.guard"
 import {
   Body,
   Controller,
@@ -24,10 +24,12 @@ import { InvitationStatusProjectMemberDto } from "@/project-member/dto/invitatio
 import { UpdateProjectDto } from "./dto/update.dto"
 import { PaginationProjectDto } from "./dto/pagination.dto"
 import { ApiBearerAuth } from "@nestjs/swagger"
+import { ProjectRoleGuard } from "@/guards/projectRole.guard"
+import { ProjectRole } from "@/decorators/projecetRole.decorator"
 
 @ApiBearerAuth()
 @Controller("project")
-@UseGuards(JwtAuthGuard, RolesGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, SystemRolesGuard, PermissionsGuard)
 export class ProjectController {
   constructor(
     private projectService: ProjectService,
@@ -35,13 +37,15 @@ export class ProjectController {
   ) {}
 
   @Post("create")
-  @Permissions("Project:Create")
+  // @Permissions("Project:Create")
   create(@Body() dto: CreateProjectDto, @Req() req) {
     const userId: string = req.user.userId
     return this.projectService.create(dto, userId)
   }
 
+  @UseGuards(ProjectRoleGuard)
   @Post("invite")
+  @ProjectRole("ADMIN")
   @Permissions("Project:Invite")
   inviteToProject(@Body() dto: inviteToProjectMemberDto, @Req() req) {
     const userId: string = req.user.userId
@@ -49,6 +53,7 @@ export class ProjectController {
   }
 
   @Patch(":projectId/invitations/status")
+  @ProjectRole("ADMIN")
   changeInvitationStatus(
     @Body() dto: InvitationStatusProjectMemberDto,
     @Req() req,
@@ -59,6 +64,7 @@ export class ProjectController {
   }
 
   @Patch("update/:projectId")
+  @ProjectRole("ADMIN")
   update(
     @Body() dto: UpdateProjectDto,
     @Req() req,
@@ -83,6 +89,7 @@ export class ProjectController {
   }
 
   @Delete(":projectId")
+  @ProjectRole("OWNER")
   @HttpCode(204)
   delete(@Param("projectId", new ParseUUIDPipe()) projectId: string) {
     return this.projectService.delete(projectId)

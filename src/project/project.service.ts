@@ -61,7 +61,7 @@ export class ProjectService {
       throw new NotFoundException("Project Not Found")
     }
 
-    if (member && member.role !== "OWNER") {
+    if (member.role !== "OWNER" && member.role !== "ADMIN") {
       throw new ForbiddenException("Only project owner can update project ")
     }
 

@@ -16,61 +16,61 @@ import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create.dto';
 import { JwtAuthGuard } from "@/guards/jwt-auth.guard"
-import { RolesGuard } from "@/guards/roles.guard"
-import { Role } from "@/decorators/role.decorator"
+import { SystemRolesGuard } from "@/guards/systemRoles.guard"
 import { PermissionsGuard } from "@/guards/permissions.guard"
-import { PaginationRoleDto } from './dto/pagination.dto';
-import { updateRoleDto } from './dto/update-role.dto';
+import { PaginationRoleDto } from "./dto/pagination.dto"
+import { updateRoleDto } from "./dto/update-role.dto"
 import { ROLE_SWAGGER_EXAMPLES } from "@/constants/swagger/role.example"
+import { SystemRole } from "@/decorators/SystemRole.decorator"
 
 @ApiBearerAuth()
-@Controller('role')
-@UseGuards(JwtAuthGuard, RolesGuard, PermissionsGuard)
+@Controller("role")
+@UseGuards(JwtAuthGuard, SystemRolesGuard, PermissionsGuard)
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
-  @Post('create')
-  @Role('Admin')
+  @Post("create")
+  @SystemRole("Admin")
   create(@Body() dto: CreateRoleDto) {
-    return this.roleService.create(dto);
+    return this.roleService.create(dto)
   }
 
-  @Get('list')
+  @Get("list")
   getList(@Query() query: PaginationRoleDto) {
-    return this.roleService.getList(query.page, query.pageSize);
+    return this.roleService.getList(query.page, query.pageSize)
   }
 
-  @Get(':id')
+  @Get(":id")
   @ApiParam({
-    name: 'id',
+    name: "id",
     required: true,
     type: String,
-    format: 'uuid',
+    format: "uuid",
     example: ROLE_SWAGGER_EXAMPLES.UUID,
   })
-  getById(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.roleService.getById(id);
+  getById(@Param("id", new ParseUUIDPipe()) id: string) {
+    return this.roleService.getById(id)
   }
 
-  @Patch(':id')
-  @Role('Admin')
+  @Patch(":id")
+  @SystemRole("Admin")
   @ApiParam({
-    name: 'id',
+    name: "id",
     required: true,
     type: String,
-    format: 'uuid',
+    format: "uuid",
     example: ROLE_SWAGGER_EXAMPLES.UUID,
   })
   update(
-    @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() dto: updateRoleDto,
+    @Param("id", new ParseUUIDPipe()) id: string,
+    @Body() dto: updateRoleDto
   ) {
-    return this.roleService.update(id, dto);
+    return this.roleService.update(id, dto)
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.roleService.delete(id);
+  delete(@Param("id", new ParseUUIDPipe()) id: string) {
+    return this.roleService.delete(id)
   }
 }
