@@ -7,40 +7,40 @@ const prisma = new PrismaClient()
 async function main() {
   console.log("🌱 Starting database seed...")
 
-  // 1️⃣ Create default USER role
+  // 1️⃣ Create default STAFF role
   let userRole = await prisma.role.findFirst({
-    where: { title: "User" },
+    where: { title: "STAFF" },
   })
 
   if (!userRole) {
     userRole = await prisma.role.create({
       data: {
-        title: "User",
+        title: "STAFF",
       },
     })
-    console.log("✅ Created default role: user")
+    console.log("✅ Created default role: STAFF")
   } else {
-    console.log('ℹ️ Default role "user" already exists')
+    console.log('ℹ️ Default role "STAFF" already exists')
   }
 
   let adminRole = await prisma.role.findFirst({
-    where: { title: "Admin" },
+    where: { title: "SUPER_ADMIN" },
   })
 
   if (!adminRole) {
     adminRole = await prisma.role.create({
       data: {
-        title: "Admin",
+        title: "SUPER_ADMIN",
       },
     })
-    console.log("✅ Created default role: admin")
+    console.log("✅ Created default role: SUPER_ADMIN")
   } else {
-    console.log('ℹ️ Default role "admin" already exists')
+    console.log('ℹ️ Default role "SUPER_ADMIN" already exists')
   }
 
-  const hashedPassword = await bcrypt.hash("admin", 10)
+  const hashedPassword = await bcrypt.hash("SUPER_ADMIN", 10)
 
-  // Create admin user if it doesn't exist
+  // Create SUPER_ADMIN user if it doesn't exist
   await prisma.user.upsert({
     where: { email: "admin@example.com" },
     update: {},

@@ -15,24 +15,27 @@ model User {
   refreshToken  String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
+
   roleId        String
+  role          Role            @relation(fields: [roleId], references: [id])
+
   ProjectMember ProjectMember[] @relation("ProjectInviter")
   projects      ProjectMember[]
   tasks         Task[]          @relation("AssignedTasks")
-  role          Role            @relation(fields: [roleId], references: [id])
 }
 
 model Role {
   id          String       @id @default(uuid())
-  title       String       @unique
-  users       User[]
+  title       String       @unique   // e.g. SUPER_ADMIN, COMPANY_ADMIN, STAFF, EXTERNAL_USER
+  scope       RoleScope    @default(SYSTEM) 
   permissions Permission[] @relation("RolePermissions")
+  users       User[]       
 }
 
 model Permission {
   id          String  @id @default(uuid())
+  title       String  @unique       
   description String?
-  title       String  @unique
   roles       Role[]  @relation("RolePermissions")
 }
 
@@ -51,13 +54,14 @@ model ProjectMember {
   id                   String       @id @default(uuid())
   userId               String
   projectId            String
-  role                 ProjectRole  @default(MEMBER)
+  role                 ProjectRole  @default(MEMBER) 
   favorite             Boolean      @default(false)
   invitedById          String?
   joinedAt             DateTime?
   lastActive           DateTime?
   notificationsEnabled Boolean      @default(true)
   status               MemberStatus @default(ACTIVE)
+
   invitedBy            User?        @relation("ProjectInviter", fields: [invitedById], references: [id])
   project              Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   user                 User         @relation(fields: [userId], references: [id])
@@ -78,6 +82,11 @@ model Task {
   project     Project?     @relation(fields: [projectId], references: [id])
 }
 
+enum RoleScope {
+  SYSTEM
+  PROJECT
+}
+
 enum MemberStatus {
   ACTIVE
   INVITED
@@ -87,8 +96,8 @@ enum MemberStatus {
 
 enum ProjectRole {
   OWNER
-  MEMBER
   ADMIN
+  MEMBER
   VIEWER
 }
 

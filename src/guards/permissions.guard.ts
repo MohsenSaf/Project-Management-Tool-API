@@ -13,7 +13,7 @@ export class PermissionsGuard implements CanActivate {
     )
 
     const { user } = context.switchToHttp().getRequest()
-    if (user?.role === "Admin") return true
+    if (user?.role === "SUPER_ADMIN") return true
 
     if (!requiredPermissions) return true
 

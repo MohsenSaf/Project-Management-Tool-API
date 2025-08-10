@@ -12,7 +12,7 @@ export class AuthController {
   @Post("signup")
   async signup(@Body() dto: CreateUserDto) {
     const userRole = await this.authService["prisma"].role.findUnique({
-      where: { title: "User" },
+      where: { title: "STAFF" },
       include: {
         permissions: true,
       },
