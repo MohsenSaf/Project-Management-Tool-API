@@ -191,4 +191,12 @@ export class ProjectService {
       list: data,
     }
   }
+
+  async delete(projectId: string) {
+    return await this.prisma.project.delete({
+      where: {
+        id: projectId,
+      },
+    })
+  }
 }

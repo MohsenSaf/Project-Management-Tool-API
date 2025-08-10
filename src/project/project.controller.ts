@@ -5,7 +5,9 @@ import { RolesGuard } from "@/guards/roles.guard"
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -77,5 +79,11 @@ export class ProjectController {
   @Get(":projectId")
   getById(@Param("projectId") projectId: string) {
     return this.projectService.getById(projectId)
+  }
+
+  @Delete(":projectId")
+  @HttpCode(204)
+  delete(@Param("projectId") projectId: string) {
+    return this.projectService.delete(projectId)
   }
 }
