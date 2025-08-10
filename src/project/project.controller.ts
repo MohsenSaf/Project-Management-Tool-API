@@ -9,6 +9,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -51,7 +52,7 @@ export class ProjectController {
   changeInvitationStatus(
     @Body() dto: InvitationStatusProjectMemberDto,
     @Req() req,
-    @Param("projectId") projectId: string
+    @Param("projectId", new ParseUUIDPipe()) projectId: string
   ) {
     const userId: string = req.user.userId
     return this.projectMember.changeInvitationStatus(dto, projectId, userId)
@@ -61,7 +62,7 @@ export class ProjectController {
   update(
     @Body() dto: UpdateProjectDto,
     @Req() req,
-    @Param("projectId") projectId: string
+    @Param("projectId", new ParseUUIDPipe()) projectId: string
   ) {
     const userId: string = req.user.userId
     return this.projectService.update(dto, userId, projectId)
@@ -77,13 +78,13 @@ export class ProjectController {
   }
 
   @Get(":projectId")
-  getById(@Param("projectId") projectId: string) {
+  getById(@Param("projectId", new ParseUUIDPipe()) projectId: string) {
     return this.projectService.getById(projectId)
   }
 
   @Delete(":projectId")
   @HttpCode(204)
-  delete(@Param("projectId") projectId: string) {
+  delete(@Param("projectId", new ParseUUIDPipe()) projectId: string) {
     return this.projectService.delete(projectId)
   }
 }
