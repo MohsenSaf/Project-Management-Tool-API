@@ -37,7 +37,7 @@ export class ProjectService {
             user: {
               select: {
                 id: true,
-                name: true,
+                username: true,
                 email: true,
               },
             },
@@ -110,7 +110,7 @@ export class ProjectService {
                     },
                     {
                       user: {
-                        name: {
+                        username: {
                           contains: searchText,
                           mode: "insensitive",
                         },
@@ -172,7 +172,7 @@ export class ProjectService {
               user: {
                 select: {
                   id: true,
-                  name: true,
+                  username: true,
                 },
               },
               role: true,

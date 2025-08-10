@@ -1,78 +1,68 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id           String          @id @default(uuid())
-  email        String          @unique
-  password     String
-  name         String
-  role         Role            @relation(fields: [roleId], references: [id])
-  roleId       String
-  projects     ProjectMember[]
-  tasks        Task[]          @relation("AssignedTasks")
-  refreshToken String?
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-
+  id            String          @id @default(uuid())
+  email         String          @unique
+  password      String
+  refreshToken  String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  roleId        String
+  username      String
   ProjectMember ProjectMember[] @relation("ProjectInviter")
+  projects      ProjectMember[]
+  tasks         Task[]          @relation("AssignedTasks")
+  role          Role            @relation(fields: [roleId], references: [id])
 }
 
 model Role {
-  id          String        @id @default(uuid())
-  title       String        @unique
-  permissions Permission[]  @relation("RolePermissions")
+  id          String       @id @default(uuid())
+  title       String       @unique
   users       User[]
+  permissions Permission[] @relation("RolePermissions")
 }
 
 model Permission {
-  id          String   @id @default(uuid())
-  title       String   @unique
+  id          String  @id @default(uuid())
   description String?
-  roles       Role[]   @relation("RolePermissions")
+  title       String  @unique
+  roles       Role[]  @relation("RolePermissions")
 }
 
 model Project {
   id          String          @id @default(uuid())
   title       String
   description String?
-  endTime     DateTime?  
-  members     ProjectMember[]
-  tasks       Task[]
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
+  endTime     DateTime?
+  members     ProjectMember[]
+  tasks       Task[]
 }
 
 model ProjectMember {
-  id        String      @id @default(uuid())
-  userId    String
-  projectId String
-  role      ProjectRole @default(MEMBER)
- 
-  joinedAt    DateTime?            
-  invitedById String?                             
-  status      MemberStatus   @default(ACTIVE)      
-  lastActive  DateTime?                            
-  notificationsEnabled Boolean @default(true)      
-  favorite    Boolean        @default(false)       
- 
-  user    User    @relation(fields: [userId], references: [id])
-  project Project @relation(fields: [projectId], references: [id],onDelete: Cascade)
-  invitedBy User? @relation("ProjectInviter", fields: [invitedById], references: [id])
+  id                   String       @id @default(uuid())
+  userId               String
+  projectId            String
+  role                 ProjectRole  @default(MEMBER)
+  favorite             Boolean      @default(false)
+  invitedById          String?
+  joinedAt             DateTime?
+  lastActive           DateTime?
+  notificationsEnabled Boolean      @default(true)
+  status               MemberStatus @default(ACTIVE)
+  invitedBy            User?        @relation("ProjectInviter", fields: [invitedById], references: [id])
+  project              Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user                 User         @relation(fields: [userId], references: [id])
 
-  @@unique([userId,projectId])
-
+  @@unique([userId, projectId])
 }
 
 model Task {
@@ -84,9 +74,8 @@ model Task {
   dueDate     DateTime?
   projectId   String?
   assigneeId  String?
-
-  project  Project? @relation(fields: [projectId], references: [id]) 
-  assignee User?   @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  assignee    User?        @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  project     Project?     @relation(fields: [projectId], references: [id])
 }
 
 enum MemberStatus {
@@ -98,10 +87,11 @@ enum MemberStatus {
 
 enum ProjectRole {
   OWNER
-  ADMIN
   MEMBER
+  ADMIN
   VIEWER
 }
+
 enum TaskStatus {
   TODO
   IN_PROGRESS

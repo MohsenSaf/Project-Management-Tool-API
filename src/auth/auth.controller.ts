@@ -23,7 +23,7 @@ export class AuthController {
       data: {
         email: dto.email,
         password: hashedPassword,
-        name: dto.name,
+        username: dto.username,
         role: {
           connect: { id: userRole?.id },
         },
@@ -51,7 +51,7 @@ export class AuthController {
 
     await this.authService.updateRefreshToken(user.id, tokens.refreshToken);
 
-    return { userId: user.id, username: user.name, tokens, permissions };
+    return { userId: user.id, username: user.username, tokens, permissions };
   }
 
   @Post('refresh')
