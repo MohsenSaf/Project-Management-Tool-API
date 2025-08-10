@@ -8,6 +8,7 @@ import { ProjectService } from "./project.service"
 import { inviteToProjectMemberDto } from "../project-member/dto/inviteTo.dto"
 import { ProjectMemberService } from "@/project-member/project-member.service"
 import { InvitationStatusProjectMemberDto } from "@/project-member/dto/invitationStatus.dto"
+import { UpdateProjectDto } from "./dto/update.dto"
 
 @Controller("project")
 @UseGuards(JwtAuthGuard, RolesGuard, PermissionsGuard)
@@ -39,5 +40,15 @@ export class ProjectController {
   ) {
     const userId: string = req.user.userId
     return this.projectMember.changeInvitationStatus(dto, projectId, userId)
+  }
+
+  @Patch("update/:projectId")
+  update(
+    @Body() dto: UpdateProjectDto,
+    @Req() req,
+    @Param("projectId") projectId: string
+  ) {
+    const userId: string = req.user.userId
+    return this.projectService.update(dto, userId, projectId)
   }
 }

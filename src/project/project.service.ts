@@ -1,6 +1,11 @@
 import { PrismaService } from "@/prisma/prisma.service"
-import { Injectable } from "@nestjs/common"
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common"
 import { CreateProjectDto } from "./dto/create.dto"
+import { UpdateProjectDto } from "./dto/update.dto"
 
 @Injectable()
 export class ProjectService {
@@ -37,6 +42,40 @@ export class ProjectService {
             },
           },
         },
+      },
+    })
+  }
+
+  async update(dto: UpdateProjectDto, userId: string, projectId: string) {
+    const member = await this.prisma.projectMember.findUnique({
+      where: {
+        userId_projectId: {
+          userId,
+          projectId,
+        },
+      },
+    })
+
+    if (!member) {
+      throw new NotFoundException("Project Not Found")
+    }
+
+    if (member && member.role !== "OWNER") {
+      throw new ForbiddenException("Only project owner can update project ")
+    }
+
+    return await this.prisma.project.update({
+      where: { id: projectId },
+      data: {
+        title: dto.title,
+        description: dto.description,
+        endTime: dto.endTime,
+        tasks: {
+          connect: dto.taskIds?.map((id) => ({ id })),
+        },
+      },
+      include: {
+        tasks: true,
       },
     })
   }
