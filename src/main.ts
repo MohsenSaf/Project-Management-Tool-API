@@ -4,6 +4,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exceptions.filter';
 import { ValidationPipe } from '@nestjs/common';
+import * as express from "express"
+import { join } from "path"
+import { existsSync, mkdirSync } from "fs"
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,6 +36,13 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   app.useGlobalFilters(new PrismaClientExceptionFilter());
+
+    const uploadDir = join(process.cwd(), "uploads")
+    if (!existsSync(uploadDir)) {
+      mkdirSync(uploadDir, { recursive: true })
+    }
+
+    app.use("/uploads", express.static(uploadDir))
 
   const port = parseInt(process.env.PORT ?? '3000', 10);
   await app.listen(port);

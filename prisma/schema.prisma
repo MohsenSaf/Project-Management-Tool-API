@@ -22,6 +22,11 @@ model User {
   ProjectMember ProjectMember[] @relation("ProjectInviter")
   projects      ProjectMember[]
   assignedTasks Task[]          @relation("TaskAssignees")
+
+  avatarId String? @unique
+  avatar   Image?  @relation("UserAvatar", fields: [avatarId], references: [id])
+
+  uploads Image[] @relation("UserUploads")
 }
 
 model Role {
@@ -48,6 +53,9 @@ model Project {
   endTime     DateTime?
   members     ProjectMember[]
   tasks       Task[]
+
+  coverId String? @unique
+  cover   Image?  @relation("ProjectCover", fields: [coverId], references: [id])
 }
 
 model ProjectMember {
@@ -80,7 +88,28 @@ model Task {
   assignees   User[]       @relation("TaskAssignees")
   project     Project?     @relation(fields: [projectId], references: [id])
 
+  images      Image[]  
+
   @@unique([title, projectId])
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url       String
+  filename  String
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+
+  userId     String?
+  uploadedBy User? @relation("UserUploads", fields: [userId], references: [id])
+
+  userAvatar User? @relation("UserAvatar")
+
+  projectCover Project? @relation("ProjectCover")
+
+  taskId String?
+  task   Task? @relation(fields: [taskId], references: [id])
 }
 
 enum RoleScope {

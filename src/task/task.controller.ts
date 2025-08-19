@@ -5,6 +5,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -78,6 +79,7 @@ export class TaskController {
     format: "uuid",
     example: TASK_SWAGGER_EXAMPLES.UUID,
   })
+  @HttpCode(204)
   delete(@Param("id", new ParseUUIDPipe()) id: string) {
     return this.taskService.delete(id)
   }

@@ -8,9 +8,10 @@ import { PermissionModule } from './permission/permission.module';
 import { ProjectModule } from './project/project.module';
 import { ProjectMemberModule } from './project-member/project-member.module';
 import { TaskModule } from './task/task.module';
+import { ImageModule } from './image/image.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, RoleModule, PermissionModule, ProjectModule, ProjectMemberModule, TaskModule],
+  imports: [PrismaModule, AuthModule, RoleModule, PermissionModule, ProjectModule, ProjectMemberModule, TaskModule, ImageModule],
   controllers: [AppController],
   providers: [AppService],
 })
