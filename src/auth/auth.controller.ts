@@ -55,7 +55,13 @@ export class AuthController {
 
     await this.authService.updateRefreshToken(user.id, tokens.refreshToken)
 
-    return { userId: user.id, username: user.username, tokens, permissions }
+    return {
+      userId: user.id,
+      username: user.username,
+      tokens,
+      permissions,
+      avatar: user.avatar,
+    }
   }
 
   @Post("refresh")

@@ -50,11 +50,55 @@ export class ImageService {
     return image
   }
 
+  async uploadProjectCover(
+    file: Express.Multer.File,
+    projectId: string,
+    userId: string
+  ) {
+    const { fileName } = this.saveFile(file)
+
+    return await this.prisma.image.create({
+      data: {
+        url: `/uploads/${fileName}`,
+        filename: file.originalname,
+        mimeType: file.mimetype,
+        size: file.size,
+        userId,
+        projectCover: { connect: { id: projectId } },
+      },
+    })
+  }
+
+  async uploadTaskImages(
+    files: Array<Express.Multer.File>,
+    taskId: string,
+    userId: string
+  ) {
+    const createdFiles: object[] = []
+
+    for (const file of files) {
+      const { fileName } = this.saveFile(file)
+
+      const saved = await this.prisma.image.create({
+        data: {
+          url: `/uploads/${fileName}`,
+          filename: file.originalname,
+          mimeType: file.mimetype,
+          size: file.size,
+          userId,
+          taskId,
+        },
+      })
+
+      createdFiles.push(saved)
+    }
+
+    return createdFiles
+  }
+
   async downloadImage(id: string, res: Response) {
     const image = await this.prisma.image.findUnique({ where: { id } })
     if (!image) throw new NotFoundException("Image not found")
-
-    console.log(image)
 
     const filePath = join(process.cwd(), image.url)
 
@@ -70,5 +114,12 @@ export class ImageService {
 
     const fileStream = createReadStream(filePath)
     fileStream.pipe(res)
+  }
+
+
+    async delete(id: string) {
+    return await this.prisma.image.delete({
+      where: { id },
+    })
   }
 }

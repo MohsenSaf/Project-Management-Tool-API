@@ -32,9 +32,15 @@ export class AuthService {
 
     let user
     if (email) {
-      user = await this.prisma.user.findUnique({ where: { email } })
+      user = await this.prisma.user.findUnique({
+        where: { email },
+        include: { avatar: true },
+      })
     } else if (username) {
-      user = await this.prisma.user.findUnique({ where: { username } })
+      user = await this.prisma.user.findUnique({
+        where: { username },
+        include: { avatar: true },
+      })
     }
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -51,6 +57,7 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
+        avatar: true,
         role: {
           include: {
             permissions: true,

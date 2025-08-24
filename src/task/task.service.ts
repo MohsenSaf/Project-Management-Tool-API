@@ -162,6 +162,7 @@ export class TaskService {
             },
           },
         },
+        images: true,
       },
     })
   }

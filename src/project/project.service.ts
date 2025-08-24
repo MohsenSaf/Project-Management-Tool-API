@@ -89,6 +89,7 @@ export class ProjectService {
       include: {
         members: true,
         tasks: true,
+        cover: true,
       },
     })
   }
